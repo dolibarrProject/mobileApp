@@ -4,8 +4,8 @@ from django.db import models
 # Create your models here.
 class User(models.Model):
     userID = models.BigAutoField(primary_key=True)
-    contractID = models.ForeignKey('contract', on_delete=models.CASCADE)
-    userName = models.ForeignKey('credentials', on_delete=models.CASCADE)
+    contractID = models.ForeignKey('Contract', on_delete=models.CASCADE)
+    userName = models.ForeignKey('Credentials', on_delete=models.CASCADE)
     firstName = models.CharField(max_length=100)
     lastName = models.CharField(max_length=100)
     email = models.EmailField()
@@ -35,13 +35,18 @@ class Credentials(models.Model):
 
 
 class Supervisor(User):
-    groupRefence = models.CharField(max_length=100)
+    groupReference = models.CharField(max_length=100)#vendeur prevendeur liveur 
     # what is this?
-    assignedRegion = models.CharField(max_length=100)
-    # could be a foreign key to region table, would be better
+    assignedRegion = models.ForeignKey('City', on_delete=models.CASCADE)
     teamSize = models.IntegerField()
-    department = models.CharField(max_length=100)
     # could be a foreign key to department table, would be better
+
+
+class City(models.Model):
+
+    cityName = models.CharField(max_length=100, primary_key=True)
+    cityRegion = models.CharField(max_length=100)
+    #city region could be an enum since we have only 12 regions
 
 
 class Magazinier(User):
@@ -52,5 +57,5 @@ class Magazinier(User):
 class Warehouse(models.Model):
     warehouseID = models.BigAutoField(primary_key=True)
     warehouseLocation = models.CharField(max_length=100)
-    warehouseCapacity = models.IntegerField() 
-    # ?? capacity of what? boolean?
+    warehouseCapacity = models.IntegerField()#pallets m3
+    maxCapacity = models.IntegerField()
