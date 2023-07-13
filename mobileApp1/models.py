@@ -83,21 +83,26 @@ class Warehouse(models.Model):
     maxCapacity = models.IntegerField()
     unity = models.CharField(max_length=10, choices=UNITY_CHOICES)
 
+
 class PointOfSale(models.Model):
     posId = models.AutoField(primary_key=True)
     address = models.CharField(max_length=200)
     cityName = models.ForeignKey(Cities, on_delete=models.CASCADE)
     cashierName = models.CharField(max_length=100)
 
+
 class Moral(PointOfSale):
     organizationName = models.CharField(max_length=100)
+
 
 class Physical(PointOfSale):
     storeName = models.CharField(max_length=100)
 
+
 class Category(models.Model):
     categoryId = models.AutoField(primary_key=True)
     categoryName = models.CharField(max_length=100)
+
 
 class Product(models.Model):
     productId = models.AutoField(primary_key=True)
