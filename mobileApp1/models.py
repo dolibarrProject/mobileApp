@@ -1,15 +1,17 @@
 from django.db import models
 
 class Contract(models.Model):
-    contractID = models.BigAutoField(primary_key=True)
-    startDate = models.DateField()
-    endDate = models.DateField()
-    terms = (
+    TERMS_CHOICES = (
         ('CDI', 'CDI'),
         ('CDD', 'CDD'),
         ('SESONIER', 'SESONIER'),
         ('EXTERN', 'EXTERN'),
     )
+
+    contractID = models.BigAutoField(primary_key=True)
+    startDate = models.DateField()
+    endDate = models.DateField()
+    terms = models.CharField(max_length=10, choices=TERMS_CHOICES)
 
 class Credentials(models.Model):
     credentialId = models.AutoField(primary_key=True)
@@ -68,17 +70,18 @@ class Vehicule(models.Model):
     numChassis = models.CharField(max_length=100)
 
 class Warehouse(models.Model):
-    warehouseId = models.AutoField(primary_key=True)
+    UNITY_CHOICES = (
+        ('m3', 'm3'),
+        ('m2', 'm2'),
+        ('PALETTE', 'PALETTE'), 
+    )
+        
+    warehouseId = models.BigAutoField(primary_key=True)
     addressWarehouse = models.CharField(max_length=200)
     cityName = models.ForeignKey(Cities, on_delete=models.CASCADE)
     capacity = models.IntegerField()
     maxCapacity = models.IntegerField()
-    unity = (
-        ('m3', 'm3'),
-        ('m2', 'm2'),
-        ('PALETTE', 'PALETTE'),
-        
-    )
+    unity = models.CharField(max_length=10, choices=UNITY_CHOICES)
 
 class PointOfSale(models.Model):
     posId = models.AutoField(primary_key=True)
