@@ -79,9 +79,9 @@ WSGI_APPLICATION = 'mobileApp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mobileApp1',
+        'NAME': 'GETapp',
         'USER': 'postgres',
-        'PASSWORD': '1234567890',
+        'PASSWORD': 'Ax00Ve456',
         'HOST': 'localhost',
         'PORT': '5432',
     }

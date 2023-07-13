@@ -69,6 +69,7 @@ class Vehicule(models.Model):
     licensePlate = models.CharField(max_length=20)
     numChassis = models.CharField(max_length=100)
 
+
 class Warehouse(models.Model):
     UNITY_CHOICES = (
         ('m3', 'm3'),
