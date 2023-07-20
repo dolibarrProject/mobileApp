@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Contract(models.Model):
     TERMS_CHOICES = (
         ('CDI', 'CDI'),
@@ -13,14 +14,17 @@ class Contract(models.Model):
     endDate = models.DateField()
     terms = models.CharField(max_length=10, choices=TERMS_CHOICES)
 
+
 class Credentials(models.Model):
     credentialId = models.AutoField(primary_key=True)
     userName = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
 
+
 class Cities(models.Model):
     cityId = models.AutoField(primary_key=True)
     cityName = models.CharField(max_length=100, unique=True)
+
 
 class Users(models.Model):
     userId = models.AutoField(primary_key=True)
@@ -34,16 +38,17 @@ class Users(models.Model):
     terms = models.ForeignKey(Contract, on_delete=models.CASCADE, null=True)
     userName = models.ForeignKey('Credentials', on_delete=models.CASCADE)
 
+
 class Seller(Users):
     salesRegion = models.CharField(max_length=100)
     supervised = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='seller_supervisor')
 
-    
 
 class Supervisor(Users):
     groupReference = models.IntegerField()
     teamSize = models.IntegerField()
     cityName = models.ForeignKey(Cities, on_delete=models.CASCADE, related_name='supervisor_city')
+
 
 class PreSeller(Users):
     salesTarget = models.FloatField()
@@ -74,9 +79,8 @@ class Warehouse(models.Model):
     UNITY_CHOICES = (
         ('m3', 'm3'),
         ('m2', 'm2'),
-        ('PALETTE', 'PALETTE'), 
-    )
-        
+        ('PALETTE', 'PALETTE'),
+    )    
     warehouseId = models.BigAutoField(primary_key=True)
     addressWarehouse = models.CharField(max_length=200)
     cityName = models.ForeignKey(Cities, on_delete=models.CASCADE)
@@ -112,6 +116,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     categoryName = models.ForeignKey(Category, on_delete=models.CASCADE)
 
+
 class Order(models.Model):
     orderId = models.AutoField(primary_key=True)
     orderDate = models.DateField()
@@ -119,6 +124,7 @@ class Order(models.Model):
     orderTime = models.TimeField()
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
     # product, data, time, vender
+
 
 class OrderCard(models.Model):
     orderCardId = models.AutoField(primary_key=True)
