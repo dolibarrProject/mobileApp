@@ -29,13 +29,13 @@ class Cities(models.Model):
 class Users(models.Model):
     userId = models.AutoField(primary_key=True)
     firstName = models.CharField(max_length=100)
-    lastName = models.CharField(max_length=100)
+    lastName = models.CharField(max_length=100) 
     address = models.CharField(max_length=200)
     telephone = models.CharField(max_length=20)
     cityAddress = models.CharField(max_length=100)
-    creatDate = models.DateField()
-    updateDate = models.DateField()
-    terms = models.ForeignKey(Contract, on_delete=models.CASCADE, null=True)
+    creatDate = models.DateField(blank=True, null=True)
+    updateDate = models.DateField(blank=True, null=True)
+    terms = models.ForeignKey(Contract, on_delete=models.CASCADE, null=True, blank=True)
     userName = models.ForeignKey('Credentials', on_delete=models.CASCADE)
 
 
