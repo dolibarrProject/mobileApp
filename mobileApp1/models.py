@@ -1,38 +1,47 @@
 from django.db import models
 
 class Contract(models.Model):
-    TERMS_CHOICES = (
-        ('CDI', 'CDI'),
-        ('CDD', 'CDD'),
-        ('SESONIER', 'SESONIER'),
-        ('EXTERN', 'EXTERN'),
-    )
-
     contractID = models.BigAutoField(primary_key=True)
     startDate = models.DateField()
     endDate = models.DateField()
-    terms = models.CharField(max_length=10, choices=TERMS_CHOICES)
+    user = models.ForeignKey('Users', on_delete=models.CASCADE)
+
 
 class Credentials(models.Model):
     credentialId = models.AutoField(primary_key=True)
     userName = models.CharField(max_length=100, unique=True)
     password = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.userName
+
 class Cities(models.Model):
     cityId = models.AutoField(primary_key=True)
     cityName = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.cityName
+
 class Users(models.Model):
     userId = models.AutoField(primary_key=True)
     firstName = models.CharField(max_length=100)
-    lastName = models.CharField(max_length=100)
+    lastName = models.CharField(max_length=100) 
     address = models.CharField(max_length=200)
     telephone = models.CharField(max_length=20)
     cityAddress = models.CharField(max_length=100)
-    creatDate = models.DateField()
-    updateDate = models.DateField()
-    terms = models.ForeignKey(Contract, on_delete=models.CASCADE, null=True)
+    creatDate = models.DateField(blank=True, null=True, auto_now_add=True)
+    updateDate = models.DateField(blank=True, null=True, auto_now=True)
     userName = models.ForeignKey('Credentials', on_delete=models.CASCADE)
+    TERMS_CHOICES = (
+        ('CDI', 'CDI'),
+        ('CDD', 'CDD'),
+        ('SESONIER', 'SESONIER'),
+        ('EXTERN', 'EXTERN'),
+    )
+    terms = models.CharField(max_length=10, choices=TERMS_CHOICES)
+
+    def __str__(self):
+        return self.userName.userName  # can we return the first name + last name of the user instead?
 
 class Seller(Users):
     salesRegion = models.CharField(max_length=100)
@@ -69,6 +78,9 @@ class Vehicule(models.Model):
     licensePlate = models.CharField(max_length=20)
     numChassis = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.numChassis
+
 class Warehouse(models.Model):
     UNITY_CHOICES = (
         ('m3', 'm3'),
@@ -79,7 +91,7 @@ class Warehouse(models.Model):
     warehouseId = models.BigAutoField(primary_key=True)
     addressWarehouse = models.CharField(max_length=200)
     cityName = models.ForeignKey(Cities, on_delete=models.CASCADE)
-    capacity = models.IntegerField()
+    currentCapacity = models.IntegerField()
     maxCapacity = models.IntegerField()
     unity = models.CharField(max_length=10, choices=UNITY_CHOICES)
 
@@ -87,7 +99,11 @@ class PointOfSale(models.Model):
     posId = models.AutoField(primary_key=True)
     address = models.CharField(max_length=200)
     cityName = models.ForeignKey(Cities, on_delete=models.CASCADE)
-    cashierName = models.CharField(max_length=100)
+    firstName = models.CharField(max_length=100)
+    lastName = models.CharField(max_length=100) 
+
+    # def __str__(self):
+    #     return self. ?????????
 
 class Moral(PointOfSale):
     organizationName = models.CharField(max_length=100)
@@ -99,24 +115,37 @@ class Category(models.Model):
     categoryId = models.AutoField(primary_key=True)
     categoryName = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.categoryName
+
 class Product(models.Model):
     productId = models.AutoField(primary_key=True)
     productName = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     categoryName = models.ForeignKey(Category, on_delete=models.CASCADE)
+    quantity = models.BigIntegerField()
+    lastUpdated = models.DateField(auto_now=True)
+
+    def __str__(self):
+        return self.productName
 
 class Order(models.Model):
     orderId = models.AutoField(primary_key=True)
-    orderDate = models.DateField()
+    orderDate = models.DateField(auto_now_add=True)
     productName = models.ForeignKey(Product, on_delete=models.CASCADE)
-    orderTime = models.TimeField()
+    orderTime = models.TimeField(auto_now_add=True)
     seller = models.ForeignKey(Seller, on_delete=models.CASCADE)
+    quantity = models.BigIntegerField()
+    lastUpdated = models.DateField(auto_now=True)
+
+    def __str__(self) -> str:
+        return self.productName.productName
     # product, data, time, vender
 
 class OrderCard(models.Model):
     orderCardId = models.AutoField(primary_key=True)
-    orderCardDate = models.DateField()
+    orderCardDate = models.DateField(auto_now_add=True)
     totalAmount = models.DecimalField(max_digits=10, decimal_places=2)
     orderId = models.ForeignKey(Order, on_delete=models.CASCADE)
     vehiculeId = models.ForeignKey(Vehicule, on_delete=models.CASCADE)
