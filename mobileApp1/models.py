@@ -37,6 +37,7 @@ class Users(models.Model):
     updateDate = models.DateField(blank=True, null=True)
     terms = models.ForeignKey(Contract, on_delete=models.CASCADE, null=True, blank=True)
     userName = models.ForeignKey('Credentials', on_delete=models.CASCADE)
+    # user should be referenced in crendentials rather than the opposite
 
 
 class Seller(Users):
