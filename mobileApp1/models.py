@@ -2,28 +2,12 @@ from django.db import models
 
 
 class Contract(models.Model):
-    TERMS_CHOICES = (
-        ('CDI', 'CDI'),
-        ('CDD', 'CDD'),
-        ('SESONIER', 'SESONIER'),
-        ('EXTERN', 'EXTERN'),
-    )
+  
 
     contractID = models.BigAutoField(primary_key=True)
     startDate = models.DateField()
     endDate = models.DateField()
-    terms = models.CharField(max_length=10, choices=TERMS_CHOICES)
-
-
-class Credentials(models.Model):
-    credentialId = models.AutoField(primary_key=True)
-    userName = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=100)
-
-
-class Cities(models.Model):
-    cityId = models.AutoField(primary_key=True)
-    cityName = models.CharField(max_length=100, unique=True)
+    user = models.ForeignKey('Users', on_delete=models.CASCADE)
 
 
 class Users(models.Model):
@@ -33,11 +17,32 @@ class Users(models.Model):
     address = models.CharField(max_length=200)
     telephone = models.CharField(max_length=20)
     cityAddress = models.CharField(max_length=100)
-    creatDate = models.DateField(blank=True, null=True)
-    updateDate = models.DateField(blank=True, null=True)
-    terms = models.ForeignKey(Contract, on_delete=models.CASCADE, null=True, blank=True)
+    creatDate = models.DateField(blank=True, null=True, auto_now_add=True)
+    updateDate = models.DateField(blank=True, null=True, auto_now=True)
     userName = models.ForeignKey('Credentials', on_delete=models.CASCADE)
-    # user should be referenced in crendentials rather than the opposite
+    TERMS_CHOICES = (
+        ('CDI', 'CDI'),
+        ('CDD', 'CDD'),
+        ('SESONIER', 'SESONIER'),
+        ('EXTERN', 'EXTERN'),
+    )
+    terms = models.CharField(max_length=10, choices=TERMS_CHOICES)
+
+    def __str__(self):
+        return self.userName    # can we return the first name + last name of the user instead?
+
+class Credentials(models.Model):
+    credentialId = models.AutoField(primary_key=True)
+    userName = models.CharField(max_length=100, unique=True)
+    password = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.userName
+
+
+class Cities(models.Model):
+    cityId = models.AutoField(primary_key=True)
+    cityName = models.CharField(max_length=100, unique=True)
 
 
 class Seller(Users):
